@@ -2,10 +2,10 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-const ProductForm = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+const ProductForm = ({ title: existingTitle, description: existingDescription, price: existingPrice }) => {
+  const [title, setTitle] = useState(existingTitle || '');
+  const [description, setDescription] = useState(existingDescription || '');
+  const [price, setPrice] = useState(existingPrice || '');
   const [goToProducts, setGoToProducts] = useState(false)
   const router = useRouter()
   const handleSubmit = async (e) => {
@@ -19,8 +19,6 @@ const ProductForm = () => {
   }
   return (
     <form onSubmit={handleSubmit}>
-
-      <h1 >New Product</h1>
       <label>Product name</label>
       <input type='text' placeholder='product name' value={title} onChange={e => setTitle(e.target.value)} />
       <label>Description</label>
