@@ -32,11 +32,8 @@ const ProductForm = ({ _id, title: existingTitle, description: existingDescripti
       for (const file of files) {
         data.append('file', file)
       }
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: data,
-      })
-      console.log(res)
+      const res = await axios.post('/api/upload', data)
+      console.log(res.data)
     }
   }
   return (
