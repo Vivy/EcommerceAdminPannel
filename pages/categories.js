@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 const Categories = () => {
+  const [editedCategory, setEditedCategory] = useState(null)
   const [name, setName] = useState('')
   const [categories, setCategories] = useState([])
   const [parentCategory, setParentCategory] = useState('')
@@ -15,17 +16,35 @@ const Categories = () => {
     setCategories(result.data)
   })
 
+  const data = {
+    name, parentCategory
+  }
+
   const saveCategory = async (e) => {
     e.preventDefault()
-    await axios.post('/api/categories', { name, parentCategory })
+    if (editedCategory) {
+      data._id = editedCategory._id;
+      await axios.put('/api/categories', data)
+      setEditedCategory(null)
+    } else {
+      await axios.post('/api/categories', data)
+    }
     setName('')
     fetchCategories()
   }
 
+  const editCategory = (category) => {
+    setEditedCategory(category)
+    setName(category.name)
+    setParentCategory(category.parent?._id)
+  }
   return (
     <Layout>
       <h1>Categories</h1>
-      <label>New category name</label>
+      <label>
+        {editedCategory
+          ? `Edit Category ${editedCategory.name}`
+          : 'Create new category'}</label>
       <form onSubmit={saveCategory} className='flex gap-1'>
         <input
           type='text'
@@ -50,6 +69,7 @@ const Categories = () => {
           <tr>
             <td>Category name</td>
             <td>Parent category</td>
+            <td></td>
           </tr>
         </thead>
         <tbody>
@@ -57,6 +77,10 @@ const Categories = () => {
             <tr key={category.name}>
               <td>{category.name}</td>
               <td>{category?.parent?.name}</td>
+              <td>
+                <button onClick={() => editCategory(category)} className='btn-primary mr-1'>Edit</button>
+                <button className='btn-primary'>Delete</button>
+              </td>
             </tr>
           ))}
         </tbody>
