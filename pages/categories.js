@@ -1,8 +1,9 @@
 import Layout from '@/components/Layout'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { withSwal } from 'react-sweetalert2'
 
-const Categories = () => {
+const Categories = ({ swal }) => {
   const [editedCategory, setEditedCategory] = useState(null)
   const [name, setName] = useState('')
   const [categories, setCategories] = useState([])
@@ -16,12 +17,9 @@ const Categories = () => {
     setCategories(result.data)
   })
 
-  const data = {
-    name, parentCategory
-  }
-
   const saveCategory = async (e) => {
     e.preventDefault()
+    const data = { name, parentCategory }
     if (editedCategory) {
       data._id = editedCategory._id;
       await axios.put('/api/categories', data)
@@ -38,6 +36,25 @@ const Categories = () => {
     setName(category.name)
     setParentCategory(category.parent?._id)
   }
+
+  const deleteCategory = (category) => {
+    swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to delete ${category.name}?`,
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes, Delete!',
+      confirmButtonColor: '#d55',
+      reverseButtons: true,
+    }).then(async result => {
+      if (result.isConfirmed) {
+        const { _id } = category
+        await axios.delete('/api/categories?_id=' + _id)
+        fetchCategories()
+      }
+    })
+  }
+
   return (
     <Layout>
       <h1>Categories</h1>
@@ -79,7 +96,10 @@ const Categories = () => {
               <td>{category?.parent?.name}</td>
               <td>
                 <button onClick={() => editCategory(category)} className='btn-primary mr-1'>Edit</button>
-                <button className='btn-primary'>Delete</button>
+                <button
+                  className='btn-primary'
+                  onClick={() => deleteCategory(category)}
+                >Delete</button>
               </td>
             </tr>
           ))}
@@ -89,4 +109,8 @@ const Categories = () => {
   )
 }
 
-export default Categories
+// export default Categories
+
+export default withSwal(({ swal }, ref) => (
+  < Categories swal={swal} />
+))
