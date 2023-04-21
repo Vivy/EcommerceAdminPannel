@@ -37,6 +37,8 @@ const Categories = ({ swal }) => {
       await axios.post('/api/categories', data);
     }
     setName('');
+    setParentCategory('')
+    setProperties([])
     fetchCategories();
   };
 
@@ -44,6 +46,10 @@ const Categories = ({ swal }) => {
     setEditedCategory(category);
     setName(category.name);
     setParentCategory(category.parent?._id);
+    setProperties(category.properties.map(({ name, values }) => ({
+      name,
+      values: values.join(',')
+    })))
   };
 
   const deleteCategory = (category) => {
