@@ -63,6 +63,7 @@ const ProductForm = ({ _id, title: existingTitle, description: existingDescripti
       catInfo = parentCat
     }
   }
+
   return (
     <form onSubmit={saveProduct}>
       <label>Product name</label>
@@ -84,15 +85,17 @@ const ProductForm = ({ _id, title: existingTitle, description: existingDescripti
         ))}
       </select>
       {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-        <div key={p.name} className='flex gap-1'>
-          <div>{p.name}</div>
-          <select
-            value={productProperties[p.name]}
-            onChange={(e) => setProductProp(p.name, e.target.value)}>
-            {p.values.map(v => (
-              <option value={v} key={v}>{v}</option>
-            ))}
-          </select>
+        <div key={p.name} className=''>
+          <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
+          <div>
+            <select
+              value={productProperties[p.name]}
+              onChange={(e) => setProductProp(p.name, e.target.value)}>
+              {p.values.map(v => (
+                <option value={v} key={v}>{v}</option>
+              ))}
+            </select>
+          </div>
         </div>
       ))}
       <label>Photos

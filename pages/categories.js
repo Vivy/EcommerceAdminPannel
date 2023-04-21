@@ -192,12 +192,12 @@ const Categories = ({ swal }) => {
                   <td>
                     <button
                       onClick={() => editCategory(category)}
-                      className='btn-primary mr-1'
+                      className='btn-default mr-1'
                     >
                       Edit
                     </button>
                     <button
-                      className='btn-primary'
+                      className='btn-red'
                       onClick={() => deleteCategory(category)}
                     >
                       Delete
@@ -212,6 +212,5 @@ const Categories = ({ swal }) => {
   );
 };
 
-// export default Categories
 
 export default withSwal(({ swal }, ref) => <Categories swal={swal} />);
